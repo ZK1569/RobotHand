@@ -15,5 +15,5 @@ Robot Hand with Raspberry Pi 4
 ```meme commende mais je sais pas```
 
 3. If you can't install opencv-python on your PC or Raspberry, try: 
-  - ```pip install --upgrade pip```
-  - ```pip install -U numpy```
+  - ```pip3 install --upgrade pip```
+  - ```pip3 install --upgrade numpy```
