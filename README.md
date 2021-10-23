@@ -12,7 +12,7 @@ Robot Hand with Raspberry Pi 4
   - opencv-python
 ```pip3 install opencv-python``` or ```sudo apt-get install python3-opencv```
   - (le truque pour controller les servo-moteur)
-```meme commende mais je sais pas```
+```pip3 install adafruit-pca9685```
 
 
 
