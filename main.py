@@ -3,7 +3,9 @@ import time
 import numpy as np
 import mediapipe as mp
 import Hand_module as htm
-import math
+import MoteurTest as mt
+import math 
+
 
 #############################
 wCam, hCam = 1280,720  #save the values of the camera 
@@ -65,18 +67,7 @@ while True:
         #print ("Ring = ", ring)
         #print ("Pinky = ", pinky, "\n")
 
-        #convert the lenght to 0 at 100
-        thumbF = np.interp(thumb, [200,360],[0, 100]) #----- changer les valeurs elle marchent pas la 
-        indexF = np.interp(index, [155,360],[0, 100])
-        middleF = np.interp(middle, [130,250],[0, 100]) # -------- c'est toujours pas bon cette merde 
-        ringF = np.interp(ring, [100,260],[0, 100])
-        pinkyF = np.interp(pinky, [100,200],[0, 100])
 
-        #print ("Thumb = ", thumb)
-        #print ("Index = ", index)
-        #print ("Middle = ", middle)
-        #print ("Ring = ", ring)
-        #print ("Pinky = ", pinky, "\n")
 
         """
         Code special Raspberry:
