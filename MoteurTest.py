@@ -18,11 +18,6 @@ pca = ServoKit(channels=16)
 for i in range(nbPCAServo):
     pca.servo[i].set_pulse_width_range(MIN_IMP[i] , MAX_IMP[i])
 
-# function main 
-def main():
-
-    action()
-
 
 def action():
     for i in range(nbPCAServo):
@@ -63,10 +58,13 @@ def positionMoteur(fingers):
             pca.servo[nbrMotor].angle = por
             print("C'est le moteur n°{} avec une possition de {}".format(nbrMotor, por))
             time.sleep(0.01)
+    else:
+        #print("Informations aren't correct")
+        pass
 
 
 
 
 
 if __name__ == '__main__':
-    main()
+    action()

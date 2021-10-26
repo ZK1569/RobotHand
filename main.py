@@ -30,16 +30,26 @@ while True:
 
         #thumb
         if lmList[tipIds[0]][1] > lmList[tipIds[0]-1][1]:
-            fingers.append(1)
-        else:
             fingers.append(0)
+        else:
+            fingers.append(1)
         
         #other fingers
         for i in range(1,5):
             if lmList[tipIds[i]][2] < lmList[tipIds[i]-2][2]:
-                fingers.append(1)
-            else:
                 fingers.append(0)
+            else:
+                fingers.append(1)
+
+        """
+        #other fingers
+        for i in range(1,5):
+            if lmList[tipIds[i]][2] < lmList[tipIds[i]-2][2]:
+                fingers.append(0)
+            elif lmList[tipIds[i]][2] < lmList[tipIds[i]-3][2] and lmList[tipIds[i]][2] > lmList[tipIds[i]-4][2]:
+                fingers.append(0.5)
+            elif lmList[tipIds[i]][2] >= lmList[tipIds[i]-4][2]:
+                fingers.append(1)"""
 
         mt.positionMoteur(fingers) #action send to the motor fonction
 
