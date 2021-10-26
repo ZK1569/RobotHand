@@ -38,29 +38,22 @@ def action():
         time.sleep(0.5)
 
 
-def convert(nbr,valeurMin=200, valeurMax=360):
+def verification(var):
+    verif = False
+    if type(var) == list:
+        if len(var) == 5:
+            for i in var:
+                if i == 0 or i == 1:
+                    verif = True 
     
-    nbr = np.interp(nbr, [valeurMin,valeurMax],[0, 180]) #----- changer les valeurs elle marchent pas la 
+    return verif 
+                
+def positionMoteur(fingers):
     
-    if nbr >= 150:
-        nbr = 150
-
-    return nbr
-
-    
-
-
-def possition(doigts, valeur):
-    """Quel doigt puis la possition du doigts 0 a 180"""
-
-    valeur = convert(valeur)
-
-    pca.servo[doigts].angle = valeur
-    time.sleep(0.01)
-
-
-
-
+    if verification(fingers):
+        for nbrMotor in range(0,5):
+            pca.continuous_servo[nbrMotor].throttle = fingers[nbrMotor]
+            time.sleep(0.01)
 
 
 
