@@ -47,12 +47,21 @@ def verification(var):
                     verif = True 
     
     return verif 
-                
+
+def convert(nbr,valeurMin=0, valeurMax=1):
+    
+    nbr = np.interp(nbr, [valeurMin,valeurMax],[0, 180]) #----- changer les valeurs elle marchent pas la 
+
+    return nbr
+
+
 def positionMoteur(fingers):
     
     if verification(fingers):
         for nbrMotor in range(0,5):
-            pca.continuous_servo[nbrMotor].throttle = fingers[nbrMotor]
+            por = int(convert(fingers[nbrMotor]))
+            pca.servo[nbrMotor].angle = por
+            print("C'est le moteur n°{} avec une possition de {}".format(nbrMotor, por))
             time.sleep(0.01)
 
 

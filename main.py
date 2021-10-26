@@ -22,7 +22,7 @@ tipIds = [4, 8, 12, 16, 20]
 
 while True:
     seccess, img = cap.read()
-    img = detector.findHands(img, draw=False)
+    img = detector.findHands(img, draw=True)
     lmList = detector.findPosition(img)
 
     if len(lmList) != 0:
