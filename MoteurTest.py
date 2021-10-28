@@ -18,11 +18,6 @@ pca = ServoKit(channels=16)
 for i in range(nbPCAServo):
     pca.servo[i].set_pulse_width_range(MIN_IMP[i] , MAX_IMP[i])
 
-# function main 
-def main():
-
-    action()
-
 
 def action():
     for i in range(nbPCAServo):
@@ -38,33 +33,38 @@ def action():
         time.sleep(0.5)
 
 
-def convert(nbr,valeurMin=200, valeurMax=360):
+def verification(var):
+    verif = False
+    if type(var) == list:
+        if len(var) == 5:
+            for i in var:
+                if i == 0 or i == 1:
+                    verif = True 
+    
+    return verif 
+
+def convert(nbr,valeurMin=0, valeurMax=1):
     
     nbr = np.interp(nbr, [valeurMin,valeurMax],[0, 180]) #----- changer les valeurs elle marchent pas la 
-    
-    if nbr >= 150:
-        nbr = 150
 
     return nbr
 
+
+def positionMoteur(fingers):
     
-
-
-def possition(doigts, valeur):
-    """Quel doigt puis la possition du doigts 0 a 180"""
-
-    valeur = convert(valeur)
-
-    pca.servo[doigts].angle = valeur
-    time.sleep(0.01)
-
-
-
-
+    if verification(fingers):
+        for nbrMotor in range(0,5):
+            por = int(convert(fingers[nbrMotor]))
+            pca.servo[nbrMotor].angle = por
+            print("C'est le moteur n°{} avec une possition de {}".format(nbrMotor, por))
+            time.sleep(0.01)
+    else:
+        #print("Informations aren't correct")
+        pass
 
 
 
 
 
 if __name__ == '__main__':
-    main()
+    action()

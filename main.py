@@ -1,10 +1,7 @@
 import cv2
 import time
-import numpy as np
-import mediapipe as mp
 import Hand_module as htm
 import MoteurTest as mt
-import math 
 
 
 #############################
@@ -17,82 +14,44 @@ cap.set(4,hCam)
 
 pTime = 0 #time set 0
 
-detector = htm.handDetector(detectionCon=0.5)
+detector = htm.handDetector(detectionCon=0.75)
 
-#Possition de basse des doigts
-thumbPos = 100
-indexPos = 100
-middle = 100
-ring = 100
-pinky = 100
+#list of fingers I nead
+tipIds = [4, 8, 12, 16, 20]
+
 
 while True:
     seccess, img = cap.read()
-
-    img = detector.findHands(img, draw=False)
+    img = detector.findHands(img, draw=True)
     lmList = detector.findPosition(img)
+
     if len(lmList) != 0:
-        #print (lmList[4],lmList[8]) # Possition brut des doigts
+        fingers = []
 
-        #Tacking the values vrome the list and put it in variables 
-        thumbFingerX, thumbFingerY = lmList[4][1], lmList[4][2]     #Thumb finger     
-        indexFingerX, indexFingerY = lmList[8][1], lmList[8][2]     #Index finger  
-        middleFingerX, middleFingerY = lmList[12][1], lmList[12][2] #Middle finger
-        ringFingerX, ringFingerY = lmList[16][1], lmList[16][2]     #Ring finger 
-        pinkyFingerX, pinkyFingerY = lmList[20][1], lmList[20][2]   #Pinky Finger 
-        wristX, wristY = lmList[0][1], lmList[0][2]                 #wrist of the model
+        #thumb
+        if lmList[tipIds[0]][1] > lmList[tipIds[0]-1][1]:
+            fingers.append(0)
+        else:
+            fingers.append(1)
         
-        #cx, cy = (x1+x2)//2, (y1+y2)//2 #center between the point 4 and 8 ---- je sais pas si utile 
-
-        #cv2.circle(img, (x1,y1), 15,(255,255,0), cv2.FILLED) ------ dessin des cercle 
-        #cv2.circle(img, (x2,y2), 15,(255,255,0), cv2.FILLED)
-
-        #Draw the lines between the finger and the wrist
-        cv2.line(img,(wristX,wristY),(thumbFingerX,thumbFingerY), (255,255,0),2) 
-        cv2.line(img,(wristX,wristY),(indexFingerX,indexFingerY), (255,255,0),2)
-        cv2.line(img,(wristX,wristY),(middleFingerX,middleFingerY), (255,255,0),2)
-        cv2.line(img,(wristX,wristY),(ringFingerX,ringFingerY), (255,255,0),2)
-        cv2.line(img,(wristX,wristY),(pinkyFingerX,pinkyFingerY), (255,255,0),2)
-        
-        #Calcule the distance between the 2 points 
-        thumb = math.hypot(wristX-wristY, thumbFingerX-thumbFingerY)
-        index = math.hypot(wristX-wristY, indexFingerX-indexFingerY)
-        middle = math.hypot(wristX-wristY, middleFingerX-middleFingerY)
-        ring = math.hypot(wristX-wristY, ringFingerX-ringFingerY)
-        pinky = math.hypot(wristX-wristY, pinkyFingerX-pinkyFingerY)
-
-        #print ("Thumb = ", thumb)
-        #print ("Index = ", index)
-        #print ("Middle = ", middle)
-        #print ("Ring = ", ring)
-        #print ("Pinky = ", pinky, "\n")
-
-
+        #other fingers
+        for i in range(1,5):
+            if lmList[tipIds[i]][2] < lmList[tipIds[i]-2][2]:
+                fingers.append(0)
+            else:
+                fingers.append(1)
 
         """
-        Code special Raspberry:
-            - Les fonctions a envoyer pour les moteurs
-            - Ajouter au prealable les classes des moteurs
-            - Tester avant avec le Raspberry et les moteurs hors de ce code
+        #other fingers
+        for i in range(1,5):
+            if lmList[tipIds[i]][2] < lmList[tipIds[i]-2][2]:
+                fingers.append(0)
+            elif lmList[tipIds[i]][2] < lmList[tipIds[i]-3][2] and lmList[tipIds[i]][2] > lmList[tipIds[i]-4][2]:
+                fingers.append(0.5)
+            elif lmList[tipIds[i]][2] >= lmList[tipIds[i]-4][2]:
+                fingers.append(1)"""
 
-        """
-
-        
-
-
-
-
-        #print (length)
-
-        #hand range 50 - 300
-        #volume range -60 - 0
-
-
-        #volBar = np.interp(length, [50,300],[400, 150]) #produit en croix 
-
-        #if length < 50:
-        #    cv2.circle(img, (cx,cy), 7,(0,255,0), cv2.FILLED)
-
+        mt.positionMoteur(fingers) #action send to the motor fonction
 
     cTime = time.time()
     fps = 1/(cTime-pTime)
