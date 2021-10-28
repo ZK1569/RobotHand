@@ -1,5 +1,4 @@
 #A module that you can use every were to detect hands 
-#   You must import all the lib and this code
 #   After you juste need to copy and run the main fonction to make it work
 
 import cv2
@@ -15,76 +14,57 @@ class handDetector():
         self.trackCon = trackCon 
 
         self.mpHands = mp.solutions.hands
-        #its an object
-        self.hands = self.mpHands.Hands(self.mode, self.machands, self.detectionCon, self.trackCon) #Different parametre of hands :static_image_mode=False, max_num_hands=2,min_detection_confidence=0.5,min_detection_confidence=0.5)
-        self.mpDraw = mp.solutions.drawing_utils#solution to put the dots on the hands 
+        self.hands = self.mpHands.Hands(self.mode, self.machands, self.detectionCon, self.trackCon)
+        self.mpDraw = mp.solutions.drawing_utils
 
     def findHands(self, img, draw = True ):
-        imgRGB = cv2.cvtColor(img, cv2.COLOR_BGR2RGB)#convert the img to RGB because its BGR
-        self.results = self.hands.process(imgRGB)#methode who process the img and return the result 
-        #print(results.multi_hand_landmarks)
+        imgRGB = cv2.cvtColor(img, cv2.COLOR_BGR2RGB)
+        self.results = self.hands.process(imgRGB) 
 
-        if self.results.multi_hand_landmarks:#detect if there is hands in front of the camera
-            for handLms in self.results.multi_hand_landmarks:#for eatch hand 
-                
-                if draw: # if we wont to draw it (parameter in at the begining of the methode)
-                    #mpDraw.draw_landmarks(img, handLms)#draw the dots of the hand on the original img
-                    self.mpDraw.draw_landmarks(img, handLms, self.mpHands.HAND_CONNECTIONS)#draw the dots and the lins of the hand on the original img 
-        
+        if self.results.multi_hand_landmarks:
+            for handLms in self.results.multi_hand_landmarks:
+                if draw:
+                    self.mpDraw.draw_landmarks(img, handLms, self.mpHands.HAND_CONNECTIONS)
         return img
 
-    def findPosition(self, img, handNo=0, draw=False): #get the position of the hands
+    def findPosition(self, img, handNo=0, draw=False):
+        lmList = [] 
 
-        lmList = [] #a list with all the coordonate of hands 
+        if self.results.multi_hand_landmarks:
+            myHand = self.results.multi_hand_landmarks[handNo]
 
-        if self.results.multi_hand_landmarks: #if there is hands on the img
-            myHand = self.results.multi_hand_landmarks[handNo] #detecte a specific hand
-
-
-            for id, lm in enumerate(myHand.landmark):#take every point of the hand we wont 
-                #print(id,lm)#brut coordonat of the dots
-                h, w, c = img.shape #give the sise of the img into values 
-                cx, cy = int(lm.x*w), int(lm.y*h)# the possition in x and y of the dots 
-                #print (id, cx, cy)#print the possition of the points with the id 
-                lmList.append([id, cx, cy]) #add the values of the hand in the list (its saved) (put all vallues in a list so its a list who wontende list)
+            for id, lm in enumerate(myHand.landmark): 
+                h, w, c = img.shape
+                cx, cy = int(lm.x*w), int(lm.y*h)
+                lmList.append([id, cx, cy])
                 if draw:
-                    cv2.circle(img, (cx,cy), 15, (255,0,255),cv2.FILLED)#draw a cercle on the possition if the dot n°0
-                    #parameters of the circle: where to show, possition, color, idk)
+                    cv2.circle(img, (cx,cy), 15, (255,0,255),cv2.FILLED)
 
-        return lmList #return the list
+        return lmList
 
-
-
-
-
+    
 def main():
-    pTime = 0 #previous time
-    cTime = 0 #courent time 
-
-    #video object (la source le de video?)
+    pTime = 0
+    cTime = 0  
     cap = cv2.VideoCapture(0)
 
     detector = handDetector()
 
     while True:
-        success, img = cap.read() #variable
-
-        img = detector.findHands(img) # detect hand on the img 
-        lmList = detector.findPosition(img) #give the position of the hand in a list 
-        if len(lmList) != 0:# if there is a hand on the img it will send the possition if no it will not send position because the ls will be null
-            print(lmList[4])# show the list (if we pute an index it will just send the possition of the dot we wonted)
+        success, img = cap.read()
+        img = detector.findHands(img)
+        lmList = detector.findPosition(img)
+        if len(lmList) != 0:
+            print(lmList)
 
         cTime = time.time()
-        fps = 1/(cTime-pTime) #calcule of the fps
-        pTime = cTime # the previouse time becaume the corent time 
+        fps = 1/(cTime-pTime)
+        pTime = cTime
 
-        cv2.putText(img, str(int(fps)),(10,40), cv2.FONT_HERSHEY_PLAIN, 3, (255,0,255), 3) #to print a text on the img 
-        #parameters of putText : support, the value, "taille", "le 1er ou second plan", skill, color, tikness)
-
-
-        cv2.imshow("Image", img)#show the content of the camera
-        cv2.waitKey(1)#idk but its not working with out it 
-
-
+        cv2.putText(img, str(int(fps)),(10,40), cv2.FONT_HERSHEY_PLAIN, 3, (255,0,255), 3)
+        
+        cv2.imshow("Image", img)
+        cv2.waitKey(1)
+        
 if __name__ == "__main__":
     main()
