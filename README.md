@@ -38,10 +38,9 @@ Robot Hand with Raspberry Pi 4
   
   
 # 3D Model
-  For the hand use an elastic to connect the fingers and make if flexible.
-  
-  (Ajouter une photo de la main 3D avec des fleche pour tout montrer)
-  
+You will find the 3D model of the hand on : https://www.thingiverse.com/thing:1691704
+Created by Ryan Gross.
+    
 
   
  
