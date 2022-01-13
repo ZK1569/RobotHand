@@ -1,5 +1,5 @@
-# HandRobot
-Hand Robot with Raspberry Pi 4
+# RobotHand
+Robot Hand with Raspberry Pi 4
 
 # Prerequisite
 
